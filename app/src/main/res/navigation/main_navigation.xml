@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main_navigation"
+    app:startDestination="@id/assetFragment">
+
+    <fragment
+        android:id="@+id/assetFragment"
+        android:name="com.gulsahozaltun.bravenewcoinapp.view.AssetFragment"
+        android:label="fragment_asset"
+        tools:layout="@layout/fragment_asset" >
+        <action
+            android:id="@+id/assettoDetail"
+            app:destination="@id/assetDetailFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/assetDetailFragment"
+        android:name="com.gulsahozaltun.bravenewcoinapp.view.AssetDetailFragment"
+        android:label="fragment_asset_detail"
+        tools:layout="@layout/fragment_asset_detail" >
+        <argument
+            android:name="assetArg"
+            app:argType="com.gulsahozaltun.bravenewcoinapp.model.AssetDataModel" />
+    </fragment>
+    <fragment
+        android:id="@+id/marketFragment"
+        android:name="com.gulsahozaltun.bravenewcoinapp.view.MarketFragment"
+        android:label="fragment_market"
+        tools:layout="@layout/fragment_market" />
+</navigation>
