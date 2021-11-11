@@ -1,54 +1,56 @@
 package com.gulsahozaltun.bravenewcoinapp.viewModel
 
-import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.gulsahozaltun.bravenewcoinapp.model.AssetDataModel
 import com.gulsahozaltun.bravenewcoinapp.model.Content
-import com.gulsahozaltun.bravenewcoinapp.service.ApiUtils
 import com.gulsahozaltun.bravenewcoinapp.service.CryptoApi
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import okhttp3.OkHttpClient
+import okhttp3.Request
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 
 class CryptoDataViewModel:ViewModel() {
-     val cryptoInterface:CryptoApi
-     val assetList:MutableLiveData<List<AssetDataModel>>
 
-    init {
-        cryptoInterface=ApiUtils.getCryptoApi()
-        assetList= MutableLiveData()
-        loadAssets()
-    }
+    var job : Job? = null
 
-/*    fun loadAssets():MutableLiveData<List<AssetDataModel>>{
-        return assetList
-    }*/
+    val assets = MutableLiveData<List<AssetDataModel>>()
+    val assetError = MutableLiveData<Boolean>()
+    val assetLoading = MutableLiveData<Boolean>()
 
-    fun loadAssets(){
-        getAssets()
-    }
+    fun downloadData() {
+        val retrofit = Retrofit.Builder()
+            .baseUrl("https://bravenewcoin.p.rapidapi.com/")
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+            .create(CryptoApi::class.java)
 
+        assetLoading.value = true
+        job = viewModelScope.launch(context = Dispatchers.IO) {
 
+            val response = retrofit.getAsset()
 
-     fun getAssets(){
-        cryptoInterface.getAsset().enqueue(object :Callback<Content>{
-            override fun onResponse(call: Call<Content>, response: Response<Content>) {
-                if(response.isSuccessful){
+            withContext(Dispatchers.Main) {
+
+                if(response.isSuccessful) {
                     response.body()?.let {
-                        val assets=response.body()!!.content
-                        assetList.value=assets
-
+                        assets.value = it.content
+                        assetLoading.value = false
                     }
+                } else {
+                    assetError.value = true
+                    assetLoading.value = false
                 }
             }
-
-            override fun onFailure(call: Call<Content>, t: Throwable) {
-                println(t.localizedMessage?.toString())
-            }
-
-        })
+        }
     }
+
 
 
 }
+

@@ -11,7 +11,7 @@ import com.gulsahozaltun.bravenewcoinapp.model.AssetDataModel
 import com.gulsahozaltun.bravenewcoinapp.view.AssetFragmentDirections
 
 class AssetAdapter(var mContext:Context,
-                    var assetList:List<AssetDataModel> ):RecyclerView.Adapter<AssetAdapter.CardDesignHolder>() {
+                    var assetList:ArrayList<AssetDataModel> ):RecyclerView.Adapter<AssetAdapter.CardDesignHolder>() {
 
      val colors:Array<String> = arrayOf("#161b1e","#1d2226")
 
