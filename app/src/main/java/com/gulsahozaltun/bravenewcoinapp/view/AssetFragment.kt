@@ -37,11 +37,6 @@ class AssetFragment : Fragment() {
         observeLiveData()
 
 
-/*        viewModel.assetList.observe(viewLifecycleOwner,{ list ->
-            adapter= AssetAdapter(requireContext(),list)
-            binding.assetAdapter=adapter
-
-        })*/
     }
     private fun observeLiveData() {
 
@@ -55,17 +50,14 @@ class AssetFragment : Fragment() {
 
         viewModel.assetError.observe(viewLifecycleOwner) {
             if(it) {
-                //hata var
                 binding.countryError.visibility = View.VISIBLE
             } else {
-                //hata yok
                 binding.countryError.visibility = View.GONE
             }
         }
 
         viewModel.assetLoading.observe(viewLifecycleOwner) {
             if (it) {
-                //yükleniyor
                 binding.countryLoading.visibility = View.VISIBLE
                 binding.assetList.visibility = View.GONE
                 binding.countryError.visibility = View.GONE
